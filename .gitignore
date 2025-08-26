@@ -1,0 +1,77 @@
+# =========================
+# Node.js / General
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# =========================
+# Build outputs (client + server)
+# =========================
+dist/
+build/
+.cache/
+.temp/
+out/
+
+# If server uses build step (like Babel/TypeScript):
+server/dist/
+server/build/
+
+# If client uses Vite/CRA:
+client/dist/
+client/build/
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# =========================
+# Env files
+# =========================
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Sometimes frontend & backend each has its own env
+client/.env
+server/.env
+
+# =========================
+# Coverage & testing
+# =========================
+coverage/
+.nyc_output/
+jest-html-reporters-*.html
+
+# =========================
+# Editor / OS files
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# =========================
+# Misc
+# =========================
+*.tgz
+*.zip
+*.tar.gz
+*.rar
+*.7z
