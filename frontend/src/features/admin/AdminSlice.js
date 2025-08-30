@@ -201,6 +201,29 @@ export const UpdateOrder = createAsyncThunk(
   }
 );
 
+// delete user
+export const DeleteOrder = createAsyncThunk(
+  'admin/DeleteOrder',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.delete(
+        `http://localhost:3000/api/v1/admin/delete/${userId}`,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return { userId, data };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to delete order'
+      );
+    }
+  }
+);
+
 
 
 
@@ -381,6 +404,25 @@ const adminslice = createSlice({
         .addCase(UpdateOrder.rejected, (state, action) => {
           state.loading = false;
           state.error = action.payload||'faild to update order'
+          
+        
+      })
+
+         // delete order
+        builder
+        .addCase(DeleteUser.pending, (state) => {
+          state.deleteloading = true;
+          state.error = null;
+        })
+        .addCase(DeleteUser.fulfilled, (state, action) => {
+          state.deleteloading = false;
+          state.orders = state.orders.filter((order) => order._id !== action.payload.userId);
+          state.success =true
+         
+        })
+        .addCase(DeleteUser.rejected, (state, action) => {
+          state.deleteloading = false;
+          state.error = action.payload||'faild to delete order'
           
         
       })
