@@ -157,6 +157,49 @@ export const UpdateRoleUser = createAsyncThunk(
   }
 );
 
+// fetch all orders
+export const  FetchAllOrders = createAsyncThunk(
+  'admin/FetchAllOrders',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        'http://localhost:3000/api/v1/admin/getall/orders',
+        
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // مهم جداً إذا كنت تعتمد على cookies
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'faild to fetch orders'
+      );
+    }
+  }
+);
+
+export const UpdateOrder = createAsyncThunk(
+  "admin/UpdateOrder",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/v1/admin/update/order/${id}`,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update order"
+      );
+    }
+  }
+);
 
 
 
@@ -171,6 +214,7 @@ const adminslice = createSlice({
         deleteloading: false,
         users: [],
         user: {},
+        orders:[],
        
     },
     reducers: {
@@ -304,6 +348,39 @@ const adminslice = createSlice({
         .addCase(UpdateRoleUser.rejected, (state, action) => {
           state.loading = false;
           state.error = action.payload||'faild to fetch user'
+          
+        
+      })
+     // fetch all orders
+        builder
+        .addCase(FetchAllOrders.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(FetchAllOrders.fulfilled, (state, action) => {
+          state.loading = false;
+          state.orders = action.payload.orders;
+          state.success = true;
+        })
+        .addCase(FetchAllOrders.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload||'faild to fetch orders'
+          
+        
+      })
+        //update order
+         builder
+        .addCase(UpdateOrder.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(UpdateOrder.fulfilled, (state, action) => {
+          state.loading = false;
+          state.success = true;
+        })
+        .addCase(UpdateOrder.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload||'faild to update order'
           
         
       })
