@@ -31,7 +31,7 @@ Backend is built with **Node.js + Express + MongoDB**, and frontend with **React
 - React Router
 - Axios
 - Redux Toolkit
-- Tailwind CSS / Styled Components
+-  CSS / Styled Components
 - MUI (Material UI) & Iconify for icons
 
 ---
