@@ -1,4 +1,4 @@
-# 🛒Fullstack E-commerce Store
+# 🛒Fullstack E-commerce 
 
 A full-stack web application for managing an online store, including product catalog, shopping cart, user authentication, orders, and a simple admin panel.  
 Backend is built with **Node.js + Express + MongoDB**, and frontend with **React.js**.
