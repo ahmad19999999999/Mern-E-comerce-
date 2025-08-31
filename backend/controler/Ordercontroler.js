@@ -3,26 +3,57 @@ import Product from "../model/modelproduct.js"
 import User from "../model/usermodel.js";
 import ErrorHandler from '../utils/ErrorHandler.js';
 import HandelAsyncError from "../midalware/HandelAsyncError.js";
+import cloudinary from '../utils/CloudinaryConfig.js'
 
-export const CreatOrder=HandelAsyncError(async(req,res,next)=>{
-    const{orderItem,shippingInfo,paymentInfo,Itemprice,taxprice,shippingprice,totaleprice}=req.body
-    const order=await Order.create({
-        orderItem,
-        shippingInfo,
-        paymentInfo,
-        Itemprice,
-        taxprice,
-        shippingprice,
-        totaleprice,
-        paidAt:Date.now(),
-        user:req.user.id
+export const CreatOrder = HandelAsyncError(async (req, res, next) => {
+  const {
+    orderItem,
+    shippingInfo,
+    paymentInfo,
+    Itemprice,
+    taxprice,
+    shippingprice,
+    totaleprice
+  } = req.body;
 
+  // رفع الصور على كلاودينري لكل عنصر
+  const uploadedItems = await Promise.all(
+    orderItem.map(async (item) => {
+      let imageUrl = item.image;
+
+      // إذا الصورة Base64 نرفعها على كلاودينري
+      if (item.image && item.image.startsWith("data:image")) {
+        const uploadRes = await cloudinary.uploader.upload(item.image, {
+          folder: "orders", // تقدر تغير اسم الفولدر حسب رغبتك
+        });
+        imageUrl = uploadRes.secure_url;
+      }
+
+      return {
+        ...item,
+        image: imageUrl,
+      };
     })
-    res.status(201).json({
-        success:true,
-        order
-    })
-})
+  );
+
+  const order = await Order.create({
+    orderItem: uploadedItems,
+    shippingInfo,
+    paymentInfo,
+    Itemprice,
+    taxprice,
+    shippingprice,
+    totaleprice,
+    paidAt: Date.now(),
+    user: req.user.id,
+  });
+
+  res.status(201).json({
+    success: true,
+    order,
+  });
+});
+
 
 
 export const GetSingleOrder=HandelAsyncError(async(req,res,next)=>{
@@ -123,18 +154,24 @@ if (orderStatus === "shipped") {
   });
 });
 
-export const DeleteOrder=HandelAsyncError(async(req,res,next)=>{
-     const order=await Order.findByIdAndDelete(req.params.id)
-     if(!order){
-        return next(new ErrorHandler(404,"the order not found"))
-    } 
-    if(order.orderStatus!=="delivered"){
-        return next(new ErrorHandler(401,"this order under proccsing can not deleted"))
+export const DeleteOrder = HandelAsyncError(async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        return next(new ErrorHandler(404, "The order not found"));
     }
-    
-  res.status(204).json({
-    success: true,
-    message:"order deleted successfly"
-    
-  });
-})
+
+    if (order.orderStatus !== "Delivered") {
+        return next(new ErrorHandler(401, "This order is under processing and cannot be deleted"));
+    }
+
+    // الحذف الآمن باستخدام findByIdAndDelete
+    await Order.findByIdAndDelete(order._id);
+
+    res.status(200).json({
+        success: true,
+        message: "Order deleted successfully"
+    });
+});
+
+

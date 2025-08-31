@@ -7,7 +7,7 @@ import PageTitle from '../components/PageTitle'
 import Footer from '../components/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { FetchAllOrders, removeError } from '../features/admin/AdminSlice'
+import { DeleteOrder, FetchAllOrders, removeAccess, removeError } from '../features/admin/AdminSlice'
 import Loader from '../components/Loader'
 
 const OrderList = () => {
@@ -33,9 +33,33 @@ const OrderList = () => {
         }
       }, [dispatch, error]);
 
-      if(orders && orders.length === 0){
-        return <div className="no-orders-container"><p>No Orders Found</p></div>
-      }
+     if (orders && orders.length === 0) {
+  return (
+    <>
+    <Navbar />
+    <div className="no-orders-container">
+      <p>No Orders Found</p>
+    </div>
+    <Footer/>
+    </>
+  );
+}
+
+     const handelDeleteOrder = async (id) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this order?")
+       if (!isConfirmed) return
+  
+           try {
+              await dispatch(DeleteOrder(id)).unwrap()
+              toast.success("Order deleted successfully", { position:'top-center', autoClose:3000 })
+              dispatch(removeAccess())
+               } 
+               catch (error) {
+              toast.error(error.message || "Order not deleted", { position:'top-center', autoClose:3000 })
+              dispatch(removeError())
+          }
+        }
+
 
 
   return (
@@ -73,7 +97,7 @@ const OrderList = () => {
                   <Link to={`/admin/order/${item._id}`} className="action-icon edit-icon">
                     <Edit/>
                   </Link>
-                  <button className="action-icon delete-icon">
+                  <button className="action-icon delete-icon" onClick={() =>handelDeleteOrder(item._id)}>
                     <Delete />
                   </button>
                 </td>

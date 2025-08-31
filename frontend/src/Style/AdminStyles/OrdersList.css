@@ -6,6 +6,21 @@
     min-height: 70vh;
     margin-top: 70px;
   }
+  .no-orders-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #666;
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+}
+
   
   .ordersList-title {
     font-size: 24px;
@@ -99,6 +114,9 @@
     .action-icon {
       font-size: 18px;
     }
+
+
+
   }
   
   @media (max-width: 480px) {

@@ -181,12 +181,13 @@ export const  FetchAllOrders = createAsyncThunk(
   }
 );
 
-export const UpdateOrder = createAsyncThunk(
+export const Updateorder = createAsyncThunk(
   "admin/UpdateOrder",
-  async (id, { rejectWithValue }) => {
+  async ({orderId,orderStatus}, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/v1/admin/update/order/${id}`,
+      const { data } = await axios.put(
+        `http://localhost:3000/api/v1/admin/update/order/${orderId}`,
+        {orderStatus},
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -204,10 +205,10 @@ export const UpdateOrder = createAsyncThunk(
 // delete user
 export const DeleteOrder = createAsyncThunk(
   'admin/DeleteOrder',
-  async (userId, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/api/v1/admin/delete/${userId}`,
+        `http://localhost:3000/api/v1/admin/delete/order/${id}`,
         {
           withCredentials: true,
           headers: {
@@ -215,7 +216,7 @@ export const DeleteOrder = createAsyncThunk(
           },
         }
       );
-      return { userId, data };
+      return { id, data };
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || 'Failed to delete order'
@@ -238,6 +239,7 @@ const adminslice = createSlice({
         users: [],
         user: {},
         orders:[],
+        order:{},
        
     },
     reducers: {
@@ -393,15 +395,16 @@ const adminslice = createSlice({
       })
         //update order
          builder
-        .addCase(UpdateOrder.pending, (state) => {
+        .addCase(Updateorder.pending, (state) => {
           state.loading = true;
-          state.error = null;
+          state.order = null;
         })
-        .addCase(UpdateOrder.fulfilled, (state, action) => {
+        .addCase(Updateorder.fulfilled, (state, action) => {
           state.loading = false;
           state.success = true;
+          state.order = action.payload.order;
         })
-        .addCase(UpdateOrder.rejected, (state, action) => {
+        .addCase(Updateorder.rejected, (state, action) => {
           state.loading = false;
           state.error = action.payload||'faild to update order'
           
@@ -410,17 +413,17 @@ const adminslice = createSlice({
 
          // delete order
         builder
-        .addCase(DeleteUser.pending, (state) => {
+        .addCase(DeleteOrder.pending, (state) => {
           state.deleteloading = true;
           state.error = null;
         })
-        .addCase(DeleteUser.fulfilled, (state, action) => {
+        .addCase(DeleteOrder.fulfilled, (state, action) => {
           state.deleteloading = false;
-          state.orders = state.orders.filter((order) => order._id !== action.payload.userId);
+          state.orders = state.orders.filter((order) => order._id !== action.payload.id);
           state.success =true
          
         })
-        .addCase(DeleteUser.rejected, (state, action) => {
+        .addCase(DeleteOrder.rejected, (state, action) => {
           state.deleteloading = false;
           state.error = action.payload||'faild to delete order'
           

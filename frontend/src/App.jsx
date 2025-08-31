@@ -68,7 +68,7 @@ const App = () => {
              <Route path="/admin/users" element={<ProtecetdRout element={<UserList/>} adminonly={true}/>} />
              <Route path="/admin/user/:id" element={<ProtecetdRout element={<UpdateUserRole/>} adminonly={true}/>} />
              <Route path="/admin/orders" element={<ProtecetdRout element={<OrderList/>} adminonly={true}/>} />
-             <Route path="/admin/order/:id" element={<ProtecetdRout element={<UpdateOrder/>} adminonly={true}/>} />
+             <Route path="/admin/order/:orderId" element={<ProtecetdRout element={<UpdateOrder/>} adminonly={true}/>} />
             <Route path="/forgate/password" element={<Forgetpassword/>} />
             <Route path="/reset/:token" element={<Rasatepassword/>} />
              <Route path="/cart" element={<Cart/>} />
