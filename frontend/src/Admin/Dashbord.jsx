@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '../Style/AdminStyles/Dashboard.css'
 import Navbar from '../components/Navbar'
 import PageTitle from '../components/PageTitle'
@@ -17,8 +17,23 @@ import {
   YouTube
 } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { FetchAdminProduct, FetchAllOrders } from '../features/admin/AdminSlice'
 
 const Dashbord = () => {
+  const{products, orders} =useSelector((state)=>state.admin)
+  const dispatsh=useDispatch()
+  useEffect(()=>{
+    dispatsh(FetchAdminProduct())
+    dispatsh(FetchAllOrders())
+  },[dispatsh])
+  const totaleproducts=products.length
+  const totalorders=orders.length
+  const outofstock=products.filter((product)=>product.stock===0).length
+  const instock=products.filter((product)=>product.stock>0).length
+  const totaleRevenue=orders.reduce((acc, item) => acc + item.totaleprice, 0).toFixed(2)
+  const totaleReviews=products.reduce((acc, item) => acc + item.reviews.length, 0)
+
   return (
     <>
       <PageTitle title="Admin Dashboard" />
@@ -78,37 +93,37 @@ const Dashbord = () => {
             <div className="stat-box">
               <Inventory className="icon" />
               <h3>Total Products</h3>
-              <p>4</p>
+              <p>{totaleproducts}</p>
             </div>
 
             <div className="stat-box">
               <ShoppingCart className="icon" />
               <h3>Total Orders</h3>
-              <p>5</p>
+              <p>{totalorders}</p>
             </div>
 
             <div className="stat-box">
               <Star className="icon" />
               <h3>Total Reviews</h3>
-              <p>15</p>
+              <p>{totaleReviews}</p>
             </div>
 
             <div className="stat-box">
               <AttachMoney className="icon" />
               <h3>Total Revenue</h3>
-              <p>1500</p>
+              <p>{totaleRevenue}</p>
             </div>
 
             <div className="stat-box">
               <Error className="icon" />
               <h3>Out Of Stock</h3>
-              <p>2</p>
+              <p>{outofstock}</p>
             </div>
 
             <div className="stat-box">
               <CheckCircle className="icon" />
               <h3>In Stock</h3>
-              <p>4</p>
+              <p>{instock}</p>
             </div>
           </div>
 
