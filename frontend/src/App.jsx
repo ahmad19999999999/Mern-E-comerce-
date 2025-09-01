@@ -30,6 +30,7 @@ import UserList from './Admin/UserList.jsx'
 import UpdateUserRole from './Admin/UpdateUserRole.jsx'
 import OrderList from './Admin/OrderList.jsx'
 import UpdateOrder from './Admin/UpdateOrder.jsx'
+import ReviewsList from './Admin/ReviewsList.jsx'
 
 
 const App = () => {
@@ -69,6 +70,7 @@ const App = () => {
              <Route path="/admin/user/:id" element={<ProtecetdRout element={<UpdateUserRole/>} adminonly={true}/>} />
              <Route path="/admin/orders" element={<ProtecetdRout element={<OrderList/>} adminonly={true}/>} />
              <Route path="/admin/order/:orderId" element={<ProtecetdRout element={<UpdateOrder/>} adminonly={true}/>} />
+             <Route path="/admin/reviewId" element={<ProtecetdRout element={<ReviewsList/>} adminonly={true}/>} />
             <Route path="/forgate/password" element={<Forgetpassword/>} />
             <Route path="/reset/:token" element={<Rasatepassword/>} />
              <Route path="/cart" element={<Cart/>} />

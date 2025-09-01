@@ -225,6 +225,51 @@ export const DeleteOrder = createAsyncThunk(
   }
 );
 
+// fetch all reviews
+export const  FetchAllReviews = createAsyncThunk(
+  'admin/FetchAllReviews',
+  async (ProductId, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/v1/admin/revwies?id=${ProductId}`,
+        
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // مهم جداً إذا كنت تعتمد على cookies
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'faild to fetch reviews'
+      );
+    }
+  }
+);
+
+// delete reviews
+export const deleteReviews = createAsyncThunk(
+  'admin/deleteReviews',
+  async ({ ProductId, reviewId }, thunkAPI) => {
+    try {
+      const { data } = await axios.delete(
+        `http://localhost:3000/api/v1/admin/revwie/delete?id=${ProductId}&reviewId=${reviewId}`,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Failed to delete review'
+      );
+    }
+  }
+);
+
 
 
 
@@ -240,6 +285,7 @@ const adminslice = createSlice({
         user: {},
         orders:[],
         order:{},
+        reviews:[]
        
     },
     reducers: {
@@ -426,6 +472,42 @@ const adminslice = createSlice({
         .addCase(DeleteOrder.rejected, (state, action) => {
           state.deleteloading = false;
           state.error = action.payload||'faild to delete order'
+          
+        
+      })
+        // fetch all reviews
+        builder
+        .addCase(FetchAllReviews.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(FetchAllReviews.fulfilled, (state, action) => {
+          state.loading = false;
+          state.reviews = action.payload.reviews;
+          state.success = true;
+        })
+        .addCase(FetchAllReviews.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload||'faild to fetch products'
+          
+        
+      })
+
+      // delete review
+        builder
+        .addCase(deleteReviews.pending, (state) => {
+          state.deleteloading = true;
+          state.error = null;
+        })
+        .addCase(deleteReviews.fulfilled, (state, action) => {
+          state.loading = false;
+          state.success=action.payload.success
+          state.message=action.payload.message
+         
+        })
+        .addCase(deleteReviews.rejected, (state, action) => {
+          state.deleteloading = false;
+          state.error = action.payload||'faild to delete review'
           
         
       })

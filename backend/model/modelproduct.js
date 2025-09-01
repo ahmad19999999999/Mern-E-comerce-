@@ -44,7 +44,7 @@ const productSchema = new mongoose.Schema({
   // الحقول المطلوبة للريفيو
   numOfReviews: {
     type: Number,
-    default: 1,
+    default: 0,
   },
   reviews:  [ 
     {

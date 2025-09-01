@@ -142,22 +142,24 @@ const UpdateOrder = () => {
         </div>
 
         {/* Update Order Status */}
-        <div className="order-status">
+        <div className="order-status" de>
           <h2>Order Status</h2>
           <select
             className="status-select"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
+            disabled={loading|| orderStatus==='delivered'} // prevent changes while loading
           >
             <option value="Not Processed">Not Processed</option>
-            <option value="Processing">Processing</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Delivered">Delivered</option>
+            <option value="Processing">processing</option>
+            <option value="shipping">shipping</option>
+            <option value="delivered">delivered</option>
+            <option value="cancelled">cancelled</option>
           </select>
           <button
             className="update-button"
             onClick={handleUpdateStatus}
-            disabled={loading} // prevent multiple clicks while loading
+            disabled={loading ||!orderStatus || orderStatus==='delivered'} // prevent multiple clicks while loading
           >
             Update Status
           </button>

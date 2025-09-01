@@ -58,14 +58,23 @@
   
   .order-status.processing {
     background-color: rgba(255, 0, 0, 0.1); 
-    color: red;
+    color: orange;
   }
   
   .order-status.delivered {
     background-color: rgba(0, 255, 0, 0.1); 
     color: green;
   }
+
+   .order-status.cancelled {
+    background-color: rgba(0, 255, 0, 0.1); 
+    color: red;
+  }
   
+   .order-status.shipping {
+    background-color: rgba(0, 255, 0, 0.1); 
+    color: blue;
+  }
 
   .action-icon {
     margin-right: 10px;
